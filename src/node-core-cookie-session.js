@@ -36,18 +36,14 @@ httpserver.on("request", function(req, res){
         sessions.push({sessionId})
 
         res.setHeader("set-cookie", [`SESSION_ID=${sessionId};`])
-        res.write("Sukses login");
+        res.end("Sukses login");
       } else {
-        res.write('Gagal login');
+        res.end('Gagal login');
       }
     });
 
     req.on("end", function(){
-      if (res.writable) {
-        res.end();
-      } else {
-        res.end("Harus menginput data !")
-      }
+      res.end("Harus menginput data !");
     });
 
   } else if (req.url === '/harus-login') { 
@@ -57,10 +53,9 @@ httpserver.on("request", function(req, res){
     // Validasi apakah user memiliki cookie atau session yang valid
     if (sessions.find((session) => session.sessionId == cookies.SESSION_ID)) {
       res.end("Berahasi akses resourse");
-      return;
     }
 
-    res.end("Anda belum login")
+    res.end("Anda belum login");
   }  else {
     res.end("Default !");    
   }
@@ -84,6 +79,13 @@ const cookieParser = function (cookies) {
   
   return cookiesParser;
 }
+
+// Handdle error khusus event res.end()
+process.on('uncaughtException', function (err) {
+  if (! err.message == 'write after end') {
+    console.log(err);
+  }
+});
 
 // Jalankan server
 httpserver.listen(port, function() {

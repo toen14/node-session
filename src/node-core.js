@@ -73,6 +73,13 @@ httpserver.on("request", function(req, res){
   }
 });
 
+// Handdle error khusus event res.end()
+process.on('uncaughtException', function (err) {
+  if (! err.message == 'write after end') {
+    console.log(err);
+  }
+});
+
 // Jalankan server
 httpserver.listen(port, function() {
   console.log(`Server berjalan di port: ${port}`)
