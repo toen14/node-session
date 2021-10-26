@@ -52,7 +52,7 @@ httpserver.on("request", function(req, res){
 
   } else if (req.url === '/harus-login') { 
     // Parsing cookies
-    let cookies = cookieParser(req.headers.cookie);
+    let cookies = cookieParser(req.headers.cookie ?? '');
 
     // Validasi apakah user memiliki cookie atau session yang valid
     if (sessions.find((session) => session.sessionId == cookies.SESSION_ID)) {
